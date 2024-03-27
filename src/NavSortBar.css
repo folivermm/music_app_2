@@ -1,0 +1,33 @@
+.nav-sort-bar button {
+  cursor: pointer;
+  padding: 5px;
+}
+
+.nav-sort-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 12.5rem;
+  padding: 3.125rem 1.25rem;
+  background-color: #f2f2f2;
+  height: 100vh;
+  z-index: 9999;
+}
+
+.nav-sort-bar > * {
+  padding-bottom: 10px;
+}
+
+/* .nav-sort-bar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 12.5rem;
+    padding: 3.125rem 1.25rem;
+    background-color: #e9e9e9;
+    z-index: 9999;
+  } */
