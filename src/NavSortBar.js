@@ -1,7 +1,4 @@
-// function NavSortBar({ handleRefresh, onSortingOptionChange, startingPointRef, endingPointRef, onSortButtonClick, tempo, onTempoChange }) {
 import React, { useState } from 'react';
-import Metronome from "./Metronome"
-// import CM_C_NavPlay from './CM_C_NavPlay';
 import './NavSortBar.css';
 function NavSortBar({ onSortingOptionChange, startingPointRef, endingPointRef, onSortButtonClick }) {
     return (

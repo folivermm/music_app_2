@@ -60,6 +60,7 @@ const CM_IntMusicScore = ({ displayRest, tempo, shouldStart, delay }) => {
             // Start the Transport
             Tone.Transport.start();
         }
+        console.log("Delay prop value:", delay);
     }, [isPlaying, tempo, delay]);
 
 
@@ -86,12 +87,13 @@ const CM_IntMusicScore = ({ displayRest, tempo, shouldStart, delay }) => {
     const renderMusicScore = () => {
         let abcNotation = `X:1\nT:Untitled 1\nM:4/4\nL:1/4\nQ:1/4=${tempo}\nK:C\n`;
 
-        if (displayRest) {
-            abcNotation += 'z4 | z4 |: ';
+        // Add the scale directly without rest if displayRest is false
+        if (!displayRest) {
+            abcNotation += 'C/D/E/F/ G/A/B/C\'/ | D\'/C\'/B/A/ G/F/E/D/ :| ';
+        } else {
+            // Otherwise, include measures of rest before the scale
+            abcNotation += 'z4 | z4 |: C/D/E/F/ G/A/B/C\'/ | D\'/C\'/B/A/ G/F/E/D/ :| ';
         }
-
-        // Repeat the scale twice
-        abcNotation += 'C/D/E/F/ G/A/B/C\'/ | D\'/C\'/B/A/ G/F/E/D/ :| ';
 
         // End on a whole note
         abcNotation += 'C4 ||';

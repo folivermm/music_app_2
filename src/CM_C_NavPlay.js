@@ -1,75 +1,60 @@
-// import React, { useState, useEffect } from 'react';
-// import Metronome from './Metronome';
-// import CM_IntMusicScore from './CM_IntMusicScore';
-// import CM_MusicPlay from './CM_MusicPlay';
-// // import { useMusicControl } from './MusicControlProvider';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Metronome from './Metronome';
+import CM_IntMusicScore from './CM_IntMusicScore';
+import CM_MusicPlay from './CM_MusicPlay';
+import { setPlaybackSettings, stopPlayback } from './redux/playbackSlice'; // Update import
 
-// const CM_C_NavPlay = () => {
-//     const [tempo, setTempo] = useState(() => {
-//         const storedTempo = localStorage.getItem('tempo');
-//         return storedTempo ? parseInt(storedTempo, 10) : 60;
-//     });
+const CM_C_NavPlay = () => {
+    const dispatch = useDispatch();
+    const playback = useSelector(state => state.playback);
 
-//     const [isPlaying, setIsPlaying] = useState(false);
-//     const [continuousPlay, setContinuousPlay] = useState(false);
-//     const [displayRest, setDisplayRest] = useState(true);
-//     const [delay, setDelay] = useState(true);
+    const [tempo, setTempo] = useState(() => {
+        const storedTempo = localStorage.getItem('tempo');
+        return storedTempo ? parseInt(storedTempo, 10) : 60;
+    });
 
-//     const handleTempoChange = (newTempo) => {
-//         setTempo(newTempo);
-//     };
+    const isPlaying = playback.fourths.C.isPlaying;
+    const continuousPlay = playback.fourths.C.continuousPlay;
 
-//     const handlePlayCont = () => {
-//         setIsPlaying(true);
-//         setContinuousPlay(false);
-//         setDisplayRest(true);
-//         setDelay(true);
-//     };
+    const handleTempoChange = (newTempo) => {
+        setTempo(newTempo);
+    };
 
-//     const handlePlayScale = () => {
-//         setIsPlaying(true);
-//         setContinuousPlay(true);
-//         setDisplayRest(false);
-//         setDelay(false);
-//     };
+    const handlePlayCont = () => {
+        dispatch(setPlaybackSettings({ scale: 'C', playbackSettings: { isPlaying: true, continuousPlay: false, displayRest: true, delay: true } })); // Dispatch setPlaybackSettings action
+    };
 
-//     const handlePlayKey = () => {
-//         setIsPlaying(true);
-//         setContinuousPlay(false);
-//         setDisplayRest(true);
-//         setDelay(true);
-//     };
+    const handlePlayScale = () => {
+        dispatch(setPlaybackSettings({ scale: 'C', playbackSettings: { isPlaying: true, continuousPlay: true, displayRest: false, delay: false } })); // Dispatch setPlaybackSettings action
+    };
 
-//     const handleStop = () => {
-//         setIsPlaying(false);
-//         setContinuousPlay(false);
-//     };
+    const handleStop = () => {
+        dispatch(stopPlayback());
+    };
 
-//     useEffect(() => {
-//         setIsPlaying(false);
-//         setContinuousPlay(false);
-//     }, []);
+    useEffect(() => {
+        return () => {
+            dispatch(stopPlayback());
+        };
+    }, [dispatch]);
 
+    return (
+        <div className="nav-play-container">
+            <div className="nav-play">
+                <div className="controls-container">
+                    <Metronome tempo={tempo} isPlaying={isPlaying} onTempoChange={handleTempoChange} />
+                    <button onClick={handlePlayCont} disabled={isPlaying}>Play Cont</button>
+                    <button onClick={handlePlayScale} disabled={isPlaying}>Play Scale</button>
+                    <button onClick={handleStop} disabled={!isPlaying && !continuousPlay}>Stop</button>
+                    <CM_MusicPlay tempo={tempo} shouldStart={isPlaying || continuousPlay} continuousPlay={continuousPlay} onStop={handleStop} />
+                </div>
+                <div className="music-container">
+                    <CM_IntMusicScore displayRest={playback.fourths.C.displayRest} tempo={tempo} shouldStart={isPlaying || continuousPlay} delay={playback.fourths.C.delay} />
+                </div>
+            </div>
+        </div>
+    );
+};
 
-//     return (
-//         <div className="nav-play-container">
-//             <div className="nav-play">
-//                 <div className="controls-container">
-//                     <Metronome tempo={tempo} isPlaying={isPlaying} onTempoChange={handleTempoChange} />
-//                     <button onClick={handlePlayCont} disabled={isPlaying}>Play Cont</button>
-//                     <button onClick={handlePlayScale} disabled={isPlaying}>Play Scale</button>
-//                     <button onClick={handleStop} disabled={!isPlaying && !continuousPlay}>Stop</button>
-//                     <button onClick={handlePlayKey} disabled={isPlaying || continuousPlay}>
-//                         Play Key
-//                     </button>
-//                     <CM_MusicPlay tempo={tempo} shouldStart={isPlaying || continuousPlay} continuousPlay={continuousPlay} onStop={handleStop} />
-//                 </div>
-//                 <div className="music-container">
-//                     <CM_IntMusicScore displayRest={displayRest} tempo={tempo} shouldStart={isPlaying || continuousPlay} delay={delay} />
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default CM_C_NavPlay;
+export default CM_C_NavPlay;
