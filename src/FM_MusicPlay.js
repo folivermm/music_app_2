@@ -52,7 +52,7 @@ const FM_MusicPlay = ({ tempo, shouldStart, continuousPlay, onStop }) => {
                     setTimeout(() => {
                         synth.triggerRelease(); // Trigger the release of the note
                         setPlaybackEnded(true); // Update playbackEnded when playback ends
-                    }, Tone.Time('0:3.9').toMilliseconds()); // Wait for the duration of the extra note (4 beats)
+                    }, Tone.Time('0:3.8').toMilliseconds()); // Wait for the duration of the extra note (4 beats)
                 }
             }
 

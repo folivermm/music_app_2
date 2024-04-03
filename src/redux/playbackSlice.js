@@ -1,3 +1,4 @@
+// playbackSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -5,8 +6,8 @@ const initialState = {
     C: {
       isPlaying: false,
       continuousPlay: false,
-      displayRest: true,
-      delay: true,
+      displayRest: false,
+      delay: false,
     },
     F: {
       isPlaying: false,
@@ -16,7 +17,6 @@ const initialState = {
     },
   },
   sortedKeys: [],
-  sortingOption: 'fourths', // Default sorting option
 };
 
 export const playbackSlice = createSlice({
@@ -28,34 +28,25 @@ export const playbackSlice = createSlice({
       state.fourths[scale] = playbackSettings;
     },
     stopPlayback: (state) => {
+      // Reset the isPlaying state only
       state.fourths = {
-        C: {
-          isPlaying: false,
-          continuousPlay: false,
-          displayRest: true,
-          delay: true,
-        },
-        F: {
-          isPlaying: false,
-          continuousPlay: false,
-          displayRest: true,
-          delay: true,
-        },
+        ...state.fourths,
+        C: { ...state.fourths.C, isPlaying: false },
+        F: { ...state.fourths.F, isPlaying: false },
       };
     },
-    setSortedKeys: (state, action) => {
-      state.sortedKeys = action.payload;
+
+    playContinuous: (state, action) => {
+      const { scale } = action.payload;
+      state.fourths[scale] = { isPlaying: true, continuousPlay: false, displayRest: true, delay: true };
     },
-    setPlaybackSettings: (state, action) => {
-      const { scale, playbackSettings } = action.payload;
-      state.fourths[scale] = playbackSettings;
-    },
-    setSortingOption: (state, action) => {
-      state.sortingOption = action.payload;
+    playScale: (state, action) => {
+      const { scale } = action.payload;
+      state.fourths[scale] = { isPlaying: true, continuousPlay: true, displayRest: false, delay: false };
     },
   },
 });
 
-export const { startPlayback, stopPlayback, setSortedKeys, setPlaybackSettings, setSortingOption } = playbackSlice.actions;
+export const { startPlayback, stopPlayback, playContinuous, playScale } = playbackSlice.actions;
 
 export default playbackSlice.reducer;

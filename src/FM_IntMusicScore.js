@@ -2,8 +2,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import abcjs from 'abcjs';
 import * as Tone from 'tone';
 // import './FM_IntMusicScore.css';
+import { useSelector } from 'react-redux';
 
-const FM_IntMusicScore = ({ displayRest, tempo, shouldStart, delay }) => {
+const FM_IntMusicScore = ({ displayRest, tempo, delay }) => {
     const [highlightedNoteIndex, setHighlightedNoteIndex] = useState(-1);
     const [isPlaying, setIsPlaying] = useState(false);
     const [notationWidth, setNotationWidth] = useState(0);
@@ -11,6 +12,8 @@ const FM_IntMusicScore = ({ displayRest, tempo, shouldStart, delay }) => {
     const totalNotes = 16;
     const [tempHighlightedNoteIndex, setTempHighlightedNoteIndex] = useState(-1);
     const [loopCount, setLoopCount] = useState(0);
+
+    const shouldStart = useSelector(state => state.playback.fourths.F.isPlaying);
 
     useEffect(() => {
         setIsPlaying(shouldStart);

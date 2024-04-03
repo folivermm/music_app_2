@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { connect } from 'react-redux'; // Import connect
-import { startPlayback, stopPlayback } from './redux/playbackSlice'; // Import actions
+// import { connect } from 'react-redux';
+// import { startPlayback, stopPlayback } from './redux/playbackSlice'; 
 
 import BbM_Bb_NavPlay from './BbM_Bb_NavPlay';
 import NavSortBar from './NavSortBar';
 import CM_C_NavPlay from './CM_C_NavPlay';
 import FM_F_NavPlay from './FM_F_NavPlay';
 
-function LayOut({ startPlayback, stopPlayback }) {
+function LayOut() {
 
 
     const keyComponents = {
@@ -90,6 +90,8 @@ function LayOut({ startPlayback, stopPlayback }) {
 }
 
 
-const mapDispatchToProps = { startPlayback, stopPlayback }; // Define mapDispatchToProps to dispatch actions
+// const mapDispatchToProps = { startPlayback, stopPlayback }; // Define mapDispatchToProps to dispatch actions
 
-export default connect(null, mapDispatchToProps)(LayOut);
+// export default connect(null, mapDispatchToProps)(LayOut);
+
+export default LayOut

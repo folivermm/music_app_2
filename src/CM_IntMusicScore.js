@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import abcjs from 'abcjs';
 import * as Tone from 'tone';
+import { useSelector } from 'react-redux';
 
-
-const CM_IntMusicScore = ({ displayRest, tempo, shouldStart, delay }) => {
+const CM_IntMusicScore = ({ displayRest, tempo, delay }) => {
     const [highlightedNoteIndex, setHighlightedNoteIndex] = useState(-1);
     const [isPlaying, setIsPlaying] = useState(false);
     const [notationWidth, setNotationWidth] = useState(0);
@@ -12,11 +12,15 @@ const CM_IntMusicScore = ({ displayRest, tempo, shouldStart, delay }) => {
     const [tempHighlightedNoteIndex, setTempHighlightedNoteIndex] = useState(-1);
     const [loopCount, setLoopCount] = useState(0);
 
+    // Get shouldStart from Redux state
+    const shouldStart = useSelector(state => state.playback.fourths.C.isPlaying);
+
     useEffect(() => {
         setIsPlaying(shouldStart);
         setHighlightedNoteIndex(-1);
         setLoopCount(0);
     }, [shouldStart]);
+
 
     useEffect(() => {
         if (isPlaying) {
@@ -87,13 +91,12 @@ const CM_IntMusicScore = ({ displayRest, tempo, shouldStart, delay }) => {
     const renderMusicScore = () => {
         let abcNotation = `X:1\nT:Untitled 1\nM:4/4\nL:1/4\nQ:1/4=${tempo}\nK:C\n`;
 
-        // Add the scale directly without rest if displayRest is false
-        if (!displayRest) {
-            abcNotation += 'C/D/E/F/ G/A/B/C\'/ | D\'/C\'/B/A/ G/F/E/D/ :| ';
-        } else {
-            // Otherwise, include measures of rest before the scale
-            abcNotation += 'z4 | z4 |: C/D/E/F/ G/A/B/C\'/ | D\'/C\'/B/A/ G/F/E/D/ :| ';
+        if (displayRest) {
+            abcNotation += 'z4 | z4 |: ';
         }
+
+        // Repeat the scale twice
+        abcNotation += 'C/D/E/F/ G/A/B/C\'/ | D\'/C\'/B/A/ G/F/E/D/ :| ';
 
         // End on a whole note
         abcNotation += 'C4 ||';

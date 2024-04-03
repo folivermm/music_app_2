@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import Metronome from './Metronome';
 import CM_IntMusicScore from './CM_IntMusicScore';
 import CM_MusicPlay from './CM_MusicPlay';
-import { setPlaybackSettings, stopPlayback } from './redux/playbackSlice'; // Update import
+import { stopPlayback, playContinuous, playScale } from './redux/playbackSlice';
 
 const CM_C_NavPlay = () => {
     const dispatch = useDispatch();
     const playback = useSelector(state => state.playback);
+    const [shouldStart, setShouldStart] = useState(false); // Initialize shouldStart state
 
     const [tempo, setTempo] = useState(() => {
         const storedTempo = localStorage.getItem('tempo');
@@ -22,16 +23,20 @@ const CM_C_NavPlay = () => {
     };
 
     const handlePlayCont = () => {
-        dispatch(setPlaybackSettings({ scale: 'C', playbackSettings: { isPlaying: true, continuousPlay: false, displayRest: true, delay: true } })); // Dispatch setPlaybackSettings action
+        dispatch(playContinuous({ scale: 'C' }));
+        setShouldStart(true); // Set shouldStart to true when 'Play Cont' is clicked
     };
 
     const handlePlayScale = () => {
-        dispatch(setPlaybackSettings({ scale: 'C', playbackSettings: { isPlaying: true, continuousPlay: true, displayRest: false, delay: false } })); // Dispatch setPlaybackSettings action
+        dispatch(playScale({ scale: 'C' }));
+        setShouldStart(true); // Set shouldStart to true when 'Play Scale' is clicked
     };
 
     const handleStop = () => {
-        dispatch(stopPlayback());
+        dispatch(stopPlayback({ scale: 'C' }));
+        setShouldStart(false); // Set shouldStart to false when 'Stop' is clicked
     };
+
 
     useEffect(() => {
         return () => {
@@ -47,10 +52,10 @@ const CM_C_NavPlay = () => {
                     <button onClick={handlePlayCont} disabled={isPlaying}>Play Cont</button>
                     <button onClick={handlePlayScale} disabled={isPlaying}>Play Scale</button>
                     <button onClick={handleStop} disabled={!isPlaying && !continuousPlay}>Stop</button>
-                    <CM_MusicPlay tempo={tempo} shouldStart={isPlaying || continuousPlay} continuousPlay={continuousPlay} onStop={handleStop} />
+                    <CM_MusicPlay tempo={tempo} shouldStart={shouldStart} continuousPlay={continuousPlay} onStop={handleStop} />
                 </div>
                 <div className="music-container">
-                    <CM_IntMusicScore displayRest={playback.fourths.C.displayRest} tempo={tempo} shouldStart={isPlaying || continuousPlay} delay={playback.fourths.C.delay} />
+                    <CM_IntMusicScore displayRest={playback.fourths.C.displayRest} tempo={tempo} shouldStart={shouldStart} delay={playback.fourths.C.delay} />
                 </div>
             </div>
         </div>

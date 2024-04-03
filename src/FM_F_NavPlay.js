@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import Metronome from './Metronome';
 import FM_IntMusicScore from './FM_IntMusicScore';
 import FM_MusicPlay from './FM_MusicPlay';
-import { setPlaybackSettings, stopPlayback } from './redux/playbackSlice'; // Update import
+import { stopPlayback, playContinuous, playScale } from './redux/playbackSlice';
 
 const FM_F_NavPlay = () => {
     const dispatch = useDispatch();
     const playback = useSelector(state => state.playback);
+    const [shouldStart, setShouldStart] = useState(false); // Initialize shouldStart state
+
     const [tempo, setTempo] = useState(() => {
         const storedTempo = localStorage.getItem('tempo');
         return storedTempo ? parseInt(storedTempo, 10) : 60;
@@ -21,28 +23,20 @@ const FM_F_NavPlay = () => {
     };
 
     const handlePlayCont = () => {
-        dispatch(setPlaybackSettings({ scale: 'F', playbackSettings: { isPlaying: true, continuousPlay: false, displayRest: true, delay: true } }));
+        dispatch(playContinuous({ scale: 'F' }));
+        setShouldStart(true); // Set shouldStart to true when 'Play Cont' is clicked
     };
 
     const handlePlayScale = () => {
-        dispatch(setPlaybackSettings({ scale: 'F', playbackSettings: { isPlaying: true, continuousPlay: true, displayRest: false, delay: false } }));
+        dispatch(playScale({ scale: 'F' }));
+        setShouldStart(true); // Set shouldStart to true when 'Play Scale' is clicked
     };
 
     const handleStop = () => {
-        dispatch(stopPlayback());
+        dispatch(stopPlayback({ scale: 'F' }));
+        setShouldStart(false); // Set shouldStart to false when 'Stop' is clicked
     };
 
-    useEffect(() => {
-        if (!isPlaying && continuousPlay) {
-            const scaleKeys = Object.keys(playback.fourths);
-            const currentIndex = scaleKeys.findIndex((key) => key === 'F');
-            const nextIndex = (currentIndex + 1) % scaleKeys.length;
-            const nextScale = scaleKeys[nextIndex];
-            if (nextScale) {
-                dispatch(setPlaybackSettings({ scale: nextScale, playbackSettings: { isPlaying: true, continuousPlay: false, displayRest: true, delay: true } }));
-            }
-        }
-    }, [isPlaying, continuousPlay, dispatch, playback.fourths]);
 
     useEffect(() => {
         return () => {
@@ -58,10 +52,10 @@ const FM_F_NavPlay = () => {
                     <button onClick={handlePlayCont} disabled={isPlaying}>Play Cont</button>
                     <button onClick={handlePlayScale} disabled={isPlaying}>Play Scale</button>
                     <button onClick={handleStop} disabled={!isPlaying && !continuousPlay}>Stop</button>
-                    <FM_MusicPlay tempo={tempo} shouldStart={isPlaying || continuousPlay} continuousPlay={continuousPlay} onStop={handleStop} />
+                    <FM_MusicPlay tempo={tempo} shouldStart={shouldStart} continuousPlay={continuousPlay} onStop={handleStop} />
                 </div>
                 <div className="music-container">
-                    <FM_IntMusicScore displayRest={playback.fourths.F.displayRest} tempo={tempo} shouldStart={isPlaying || continuousPlay} delay={playback.fourths.F.delay} />
+                    <FM_IntMusicScore displayRest={playback.fourths.F.displayRest} tempo={tempo} shouldStart={shouldStart} delay={playback.fourths.F.delay} />
                 </div>
             </div>
         </div>

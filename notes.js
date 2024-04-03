@@ -767,3 +767,91 @@
 //         </div>
 //     );
 // };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState } from 'react';
+// import { useDispatch, useSelector } from 'react-redux';
+// import Metronome from './Metronome';
+// import FM_IntMusicScore from './FM_IntMusicScore';
+// import FM_MusicPlay from './FM_MusicPlay';
+// import { handlePlayCont, handlePlayScale, handleStop } from './redux/playbackSlice'; // Update import
+
+// const FM_FNavPlay = () => {
+//     const dispatch = useDispatch();
+//     const playback = useSelector(state => state.playback);
+
+//     const [tempo, setTempo] = useState(() => {
+//         const storedTempo = localStorage.getItem('tempo');
+//         return storedTempo ? parseInt(storedTempo, 10) : 60;
+//     });
+
+//     const isPlaying = playback.fourths.F.isPlaying;
+//     const continuousPlay = playback.fourths.F.continuousPlay;
+
+//     const handleTempoChange = (newTempo) => {
+//         setTempo(newTempo);
+//     };
+
+//     return (
+//         <div className="nav-play-container">
+//             <div className="nav-play">
+//                 <div className="controls-container">
+//                     <Metronome tempo={tempo} isPlaying={isPlaying} onTempoChange={handleTempoChange} />
+//                     <button onClick={() => dispatch(handlePlayCont({ scale: 'F' }))} disabled={isPlaying}>Play Cont</button>
+//                     <button onClick={() => dispatch(handlePlayScale({ scale: 'F' }))} disabled={isPlaying}>Play Scale</button>
+//                     <button onClick={() => dispatch(handleStop({ scale: 'F' }))} disabled={!isPlaying && !continuousPlay}>Stop</button>
+//                     <FM_MusicPlay tempo={tempo} shouldStart={isPlaying || continuousPlay} continuousPlay={continuousPlay} onStop={() => dispatch(handleStop({ scale: 'F' }))} />
+//                 </div>
+//                 <div className="music-container">
+//                     <FM_IntMusicScore displayRest={playback.fourths.F.displayRest} tempo={tempo} shouldStart={isPlaying || continuousPlay} delay={playback.fourths.F.delay} />
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default FM_FNavPlay;
